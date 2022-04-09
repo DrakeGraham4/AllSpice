@@ -42,7 +42,7 @@ WHERE
 DELETE FROM
   recipes
 WHERE
-  id = 3
+  id = 2
 LIMIT
   1;
 UPDATE
@@ -63,11 +63,7 @@ CREATE TABLE IF NOT EXISTS ingredients(
 INSERT INTO
   ingredients(name, quantity, recipeId)
 VALUES
-  (
-    'Noodles',
-    'One box of egg noodles',
-    2
-  );
+  ('Egg', 'One Egg', 2);
 SELECT
   *
 FROM
@@ -83,6 +79,6 @@ WHERE
 DELETE FROM
   ingredients
 WHERE
-  id = 1
+  recipeId = 1
 LIMIT
-  1
+  1;

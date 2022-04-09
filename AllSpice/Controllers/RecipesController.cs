@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AllSpice.Models;
@@ -15,11 +14,16 @@ namespace AllSpice.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly RecipesService _rService;
+        private readonly IngredientsService _iService;
 
-        public RecipesController(RecipesService rService)
+        public RecipesController(RecipesService rService, IngredientsService iService)
         {
             _rService = rService;
+            _iService = iService;
         }
+
+
+
 
         [HttpGet]
         public ActionResult<List<Recipe>> GetAll()
@@ -28,6 +32,34 @@ namespace AllSpice.Controllers
             {
                 List<Recipe> recipes = _rService.GetAll();
                 return Ok(recipes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/ingredients")]
+        public ActionResult<List<Ingredient>> GetIngredientsByRecipeId(int id)
+        {
+            try
+            {
+                List<Ingredient> ingredients = _iService.GetIngredientsByRecipeId(id);
+                return Ok(ingredients);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Recipe> GetById(int id)
+        {
+            try
+            {
+                Recipe recipe = _rService.GetById(id);
+                return Ok(recipe);
             }
             catch (Exception e)
             {

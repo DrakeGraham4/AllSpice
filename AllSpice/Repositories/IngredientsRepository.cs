@@ -14,5 +14,25 @@ namespace AllSpice.Repositories
         {
             _db = db;
         }
+
+        internal Ingredient Create(Ingredient ingredientData)
+        {
+            string sql = @"
+            INSERT INTO
+            ingredients (name, quantity, recipeId)
+            VALUES
+            (@Name, @Quantity, @RecipeId);
+            SELECT LAST_INSERT_ID();
+            ";
+            int id = _db.ExecuteScalar<int>(sql, ingredientData);
+            ingredientData.Id = id;
+            return ingredientData;
+        }
+
+        internal List<Ingredient> GetIngredientsByRecipeId(int id)
+        {
+            string sql = "SELECT * FROM ingredients i WHERE i.recipeId = @id;";
+            return _db.Query<Ingredient>(sql, new { id }).ToList();
+        }
     }
 }

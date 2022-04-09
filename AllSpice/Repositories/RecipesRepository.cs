@@ -34,7 +34,7 @@ namespace AllSpice.Repositories
         internal Recipe Create(Recipe recipeData)
         {
             string sql = @"
-            INSERT INTO games
+            INSERT INTO recipes
             (title, subtitle, category, imgUrl, creatorId)
             VALUES
             (@Title, @Subtitle, @Category, @ImgUrl, @CreatorId);
@@ -51,9 +51,13 @@ namespace AllSpice.Repositories
                 string sql = @"
                 SELECT
                 r.*,
-                a.*
+                a.*,
+                i.*
+                
                 FROM recipes r
                 JOIN accounts a ON r.creatorId = a.id
+                JOIN ingredients i ON i.recipeId = r.id
+                
                 WHERE r.id = @id;
                 ";
                 return _db.Query<Recipe, Account, Recipe>(sql, (recipe, account) =>
