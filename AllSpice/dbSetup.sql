@@ -6,27 +6,32 @@ CREATE TABLE IF NOT EXISTS accounts(
   email varchar(255) COMMENT 'User Email',
   picture varchar(255) COMMENT 'User Picture'
 ) default charset utf8 COMMENT '';
+SELECT
+  *
+FROM
+  accounts;
 CREATE TABLE IF NOT EXISTS recipes(
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  creatorId VARCHAR(255) NOT NULL,
-  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time Created',
-  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
-  title TEXT NOT NULL,
-  subtitle TEXT NOT NULL,
-  category TEXT NOT NULL,
-  imgUrl TEXT NOT NULL,
-  FOREIGN KEY (creatorId) REFERENCES accounts(id)
-) DEFAULT charset utf8 COMMENT '';
+    id INT AUTO_INCREMENT primary key,
+    creatorId VARCHAR(255) NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time Created',
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
+    title TEXT NOT NULL,
+    subtitle TEXT NOT NULL,
+    category TEXT NOT NULL,
+    imgUrl TEXT NOT NULL,
+    FOREIGN KEY (creatorId) REFERENCES accounts(id)
+  ) DEFAULT charset utf8 COMMENT '';
 INSERT INTO
   recipes (title, subtitle, category, imgUrl, creatorId)
 VALUES
   (
-    'Tams Tabbouleh',
-    'Complicated',
-    'Mediterranean',
+    'Drakes Cake',
+    'Meh',
+    'Dessert',
     'https: / / cookieandkate.com / images / 2019 / 07 / best - tabbouleh - recipe -3.jpg',
     '624f510d7a16ad15a236c950'
   );
+-- Recipes
 SELECT
   *
 FROM
@@ -53,17 +58,18 @@ SET
 WHERE
   id = 1;
 CREATE TABLE IF NOT EXISTS ingredients(
+    id INT AUTO_INCREMENT primary key,
+    name VARCHAR(255) NOT NULL,
+    quantity VARCHAR(255) NOT NULL,
     recipeId INT NOT NULL,
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time Created',
-    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
-    name TEXT NOT NULL,
-    quantity TEXT NOT NULL,
     FOREIGN KEY (recipeId) REFERENCES recipes(id)
   ) DEFAULT charset utf8 COMMENT '';
+-- Ingredients
+  DROP TABLE ingredients;
 INSERT INTO
   ingredients(name, quantity, recipeId)
 VALUES
-  ('Egg', 'One Egg', 2);
+  ('Feta', 'One', 2);
 SELECT
   *
 FROM
@@ -75,7 +81,7 @@ FROM
   ingredients i
   JOIN recipes r
 WHERE
-  i.recipeId = r.id;
+  r.id = i.recipeId;
 DELETE FROM
   ingredients
 WHERE

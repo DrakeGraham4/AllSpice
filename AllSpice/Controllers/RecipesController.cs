@@ -74,7 +74,7 @@ namespace AllSpice.Controllers
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                recipeData.creatorId = userInfo.Id;
+                recipeData.CreatorId = userInfo.Id;
                 Recipe recipe = _rService.Create(recipeData);
                 recipe.Creator = userInfo;
                 return Created($"api/recipes/{recipe.Id}", recipe);

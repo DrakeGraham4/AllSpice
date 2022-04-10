@@ -7,6 +7,6 @@ namespace AllSpice.Models
 
         public string Quantity { get; set; }
 
-        public int recipeId { get; set; }
+        public int RecipeId { get; set; }
     }
 }

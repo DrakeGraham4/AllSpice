@@ -16,12 +16,13 @@ namespace AllSpice.Services
             _rService = rService;
         }
 
-        internal Ingredient Create(Ingredient ingredientData, string userId)
+        internal Ingredient Create(Ingredient ingredientData, Account userInfo)
         {
-            Recipe recipe = _rService.GetById(ingredientData.recipeId);
-            if (recipe.creatorId != userId)
+
+            Recipe recipe = _rService.GetById(ingredientData.RecipeId);
+            if (recipe.CreatorId != userInfo.Id)
             {
-                throw new Exception("Not your recipe bruv");
+                throw new Exception("This is not your recipe");
             }
             return _iRepo.Create(ingredientData);
         }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AllSpice.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/recipes/{recipeId}/[controller]")]
     public class IngredientsController : ControllerBase
     {
         private readonly IngredientsService _iService;
@@ -24,8 +24,8 @@ namespace AllSpice.Controllers
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                Ingredient ingredient = _iService.Create(ingredientData, userInfo.Id);
-                return Created($"api/ingredients/{ingredient.Id}", ingredient);
+                Ingredient ingredient = _iService.Create(ingredientData, userInfo);
+                return Ok(ingredient);
             }
             catch (Exception e)
             {

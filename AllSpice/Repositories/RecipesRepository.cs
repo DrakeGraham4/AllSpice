@@ -51,12 +51,11 @@ namespace AllSpice.Repositories
                 string sql = @"
                 SELECT
                 r.*,
-                a.*,
-                i.*
+                a.*
+            
                 
                 FROM recipes r
                 JOIN accounts a ON r.creatorId = a.id
-                JOIN ingredients i ON i.recipeId = r.id
                 
                 WHERE r.id = @id;
                 ";

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -21,9 +20,7 @@ namespace AllSpice.Repositories
             INSERT INTO
             ingredients (name, quantity, recipeId)
             VALUES
-            (@Name, @Quantity, @RecipeId);
-            SELECT LAST_INSERT_ID();
-            ";
+            (@Name, @Quantity, @RecipeId);";
             int id = _db.ExecuteScalar<int>(sql, ingredientData);
             ingredientData.Id = id;
             return ingredientData;

@@ -27,7 +27,7 @@ namespace AllSpice.Services
         internal string Remove(int id, Account user)
         {
             Recipe recipe = _rRepo.GetById(id);
-            if (recipe.creatorId != user.Id)
+            if (recipe.CreatorId != user.Id)
             {
                 throw new Exception("Nope");
             }
