@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AllSpice.Models;
 using AllSpice.Services;
@@ -9,23 +11,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace AllSpice.Controllers
 {
     [ApiController]
-    [Route("api/recipes/{recipeId}/[controller]")]
-    public class IngredientsController : ControllerBase
+    [Route("api/[controller]")]
+    public class StepsController : ControllerBase
     {
-        private readonly IngredientsService _iService;
-        public IngredientsController(IngredientsService iService)
+        private readonly StepsService _sService;
+        public StepsController(StepsService sService)
         {
-            _iService = iService;
+            _sService = sService;
         }
+
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Ingredient>> Create([FromBody] Ingredient ingredientData)
+        public async Task<ActionResult<Step>> Create([FromBody] Step stepData)
         {
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                Ingredient ingredient = _iService.Create(ingredientData, userInfo);
-                return Ok(ingredient);
+                Step step = _sService.Create(stepData, userInfo);
+                return Ok(step);
             }
             catch (Exception e)
             {
@@ -35,14 +38,14 @@ namespace AllSpice.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult<Ingredient>> Edit([FromBody] Ingredient updates, int id)
+        public async Task<ActionResult<Step>> Update([FromBody] Step stepData, int id)
         {
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                updates.Id = id;
-                Ingredient updated = _iService.Edit(updates, userInfo);
-                return Ok(updated);
+                stepData.Id = id;
+                Step step = _sService.Update(stepData, userInfo);
+                return Ok(step);
             }
             catch (Exception e)
             {
@@ -50,14 +53,14 @@ namespace AllSpice.Controllers
             }
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult<string>> Remove(int id)
         {
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                return Ok(_iService.Remove(userInfo, id));
+                return Ok(_sService.Remove(userInfo, id));
             }
             catch (Exception e)
             {

@@ -16,10 +16,13 @@ namespace AllSpice.Controllers
         private readonly RecipesService _rService;
         private readonly IngredientsService _iService;
 
-        public RecipesController(RecipesService rService, IngredientsService iService)
+        private readonly StepsService _sService;
+
+        public RecipesController(RecipesService rService, IngredientsService iService, StepsService sService)
         {
             _rService = rService;
             _iService = iService;
+            _sService = sService;
         }
 
 
@@ -67,6 +70,8 @@ namespace AllSpice.Controllers
             }
         }
 
+
+
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<Recipe>> Create([FromBody] Recipe recipeData)
@@ -85,6 +90,24 @@ namespace AllSpice.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<ActionResult<Recipe>> Edit([FromBody] Recipe updates, int id)
+        {
+            try
+            {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                updates.Id = id;
+                Recipe updated = _rService.Edit(updates, userInfo);
+                return Ok(updated);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult<string>> Remove(int id)
@@ -93,6 +116,20 @@ namespace AllSpice.Controllers
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
                 return Ok(_rService.Remove(id, userInfo));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/steps")]
+        public ActionResult<List<Step>> GetStepsByRecipeId(int id)
+        {
+            try
+            {
+                List<Step> steps = _sService.GetStepsByRecipeId(id);
+                return Ok(steps);
             }
             catch (Exception e)
             {

@@ -67,6 +67,40 @@ namespace AllSpice.Repositories
             }
         }
 
+        internal List<FavoriteViewModel> GetAccountFavorites(string id)
+        {
+            string sql = @"
+            SELECT
+            a.*,
+            f.*,
+            r.*
+            FROM favorites f
+            JOIN recipes r ON f.recipeId = r.id
+            JOIN accounts a ON r.creatorId = a.id
+            WHERE f.accountId = @id";
+
+            List<FavoriteViewModel> recipes = _db.Query<Account, Recipe, FavoriteViewModel, FavoriteViewModel>(sql, (a, f, r) =>
+            {
+                r.Creator = a;
+                r.FavoriteId = f.Id;
+                return r;
+            }, new { id }).ToList<FavoriteViewModel>();
+            return recipes;
+        }
+
+        internal void Edit(Recipe original)
+        {
+            string sql = @"
+            UPDATE recipes
+            SET
+            title = @Title,
+            subtitle = @Subtitle,
+            category = @Category,
+            imgUrl = @ImgUrl
+            WHERE id = @Id;";
+            _db.Execute(sql, original);
+        }
+
         internal string Remove(int id)
         {
             string sql = @"

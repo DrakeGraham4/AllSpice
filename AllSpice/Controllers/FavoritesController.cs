@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AllSpice.Models;
 using AllSpice.Services;
@@ -10,52 +11,44 @@ using Microsoft.AspNetCore.Mvc;
 namespace AllSpice.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AccountController : ControllerBase
+    [Route("api/[controller]")]
+    public class FavoritesController : ControllerBase
     {
-        private readonly AccountService _accountService;
-        private readonly RecipesService _rService;
-
-        public AccountController(AccountService accountService, RecipesService rService)
+        private readonly FavoritesService _fService;
+        public FavoritesController(FavoritesService fService)
         {
-            _accountService = accountService;
-            _rService = rService;
+            _fService = fService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Account>> Get()
+        public async Task<ActionResult<FavoritesController>> Create([FromBody] Favorite favoriteData)
         {
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                return Ok(_accountService.GetOrCreateProfile(userInfo));
+                favoriteData.AccountId = userInfo.Id;
+                return Ok(_fService.Create(favoriteData));
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-
         }
 
-        [HttpGet("favorites")]
+        [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<List<FavoriteViewModel>>> GetAccountFavorites()
+        public async Task<ActionResult<string>> Remove(int id)
         {
             try
             {
                 Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-                List<FavoriteViewModel> favorites = _rService.GetAccountFavorites(userInfo.Id);
-                return Ok(favorites);
+                return Ok(_fService.Remove(id, userInfo));
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-
-
         }
-
-
     }
 }

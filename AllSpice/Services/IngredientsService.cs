@@ -31,5 +31,33 @@ namespace AllSpice.Services
         {
             return _iRepo.GetIngredientsByRecipeId(id);
         }
+
+        internal Ingredient Edit(Ingredient updates, Account userInfo)
+        {
+            Ingredient original = _iRepo.GetById(updates.Id);
+            Recipe recipe = _rService.GetById(original.RecipeId);
+            updates.RecipeId = recipe.Id;
+            if (recipe.CreatorId != userInfo.Id)
+            {
+                throw new Exception("Not your ingredient to edit");
+            }
+
+            original.Name = updates.Name ?? original.Name;
+            original.Quantity = updates.Quantity ?? original.Quantity;
+            original.RecipeId = original.RecipeId;
+            _iRepo.Edit(original);
+            return original;
+        }
+
+        internal object Remove(Account userInfo, int id)
+        {
+            Ingredient ingredient = _iRepo.GetById(id);
+            Recipe recipe = _rService.GetById(ingredient.RecipeId);
+            if (recipe.CreatorId != userInfo.Id)
+            {
+                throw new Exception("You cannot delete this recipe");
+            }
+            return _iRepo.Remove(id);
+        }
     }
 }

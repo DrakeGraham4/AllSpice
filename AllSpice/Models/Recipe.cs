@@ -16,4 +16,8 @@ namespace AllSpice.Models
 
         public Account? Creator { get; set; }
     }
+    public class FavoriteViewModel : Recipe
+    {
+        public int FavoriteId { get; set; }
+    }
 }

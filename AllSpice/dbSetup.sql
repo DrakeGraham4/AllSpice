@@ -88,3 +88,46 @@ WHERE
   recipeId = 1
 LIMIT
   1;
+CREATE TABLE IF NOT EXISTS steps(
+    id INT AUTO_INCREMENT primary key,
+    position INT,
+    body TEXT,
+    recipeId INT NOT NULL,
+    FOREIGN KEY(recipeId) REFERENCES recipes(id)
+  ) default charset utf8 COMMENT '';
+SELECT
+  *
+FROM
+  steps;
+DROP TABLE steps;
+INSERT INTO
+  steps (position, body, recipeId)
+VALUES
+  (1, "Cut Cheese", 2);
+SELECT
+  s.*,
+  r.*
+FROM
+  steps s
+  JOIN recipes r
+WHERE
+  r.id = s.recipeId;
+SELECT
+  *
+FROM
+  ingredients i
+WHERE
+  i.recipeId = 2;
+DELETE FROM
+  steps
+WHERE
+  id = 18
+LIMIT
+  1;
+CREATE TABLE IF NOT EXISTS favorites(
+    id INT AUTO_INCREMENT NOT NULL primary key,
+    accountId VARCHAR(255) NOT NULL,
+    recipeId INT NOT NULL,
+    FOREIGN KEY (accountID) REFERENCES accounts(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipeID) REFERENCES recipes(id) ON DELETE CASCADE
+  ) default charset utf8 COMMENT '';

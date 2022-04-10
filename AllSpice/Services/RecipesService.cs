@@ -43,5 +43,28 @@ namespace AllSpice.Services
             }
             return found;
         }
+
+        internal Recipe Edit(Recipe updates, Account userInfo)
+        {
+            Recipe original = GetById(updates.Id);
+            if (original.CreatorId != userInfo.Id)
+            {
+                throw new Exception("Not your recipe to edit!");
+            }
+            original.Title = updates.Title ?? original.Title;
+            original.Subtitle = updates.Subtitle ?? original.Subtitle;
+            original.Category = updates.Category ?? original.Category;
+            _rRepo.Edit(original);
+            return original;
+        }
+
+
+
+        internal List<FavoriteViewModel> GetAccountFavorites(string id)
+        {
+            return _rRepo.GetAccountFavorites(id);
+        }
+
+
     }
 }
